@@ -1,0 +1,24 @@
+// Establish a MySQL database connection
+$mysqli = new mysqli("localhost", "username", "password", "database");
+
+// Define the SQL query string with multiple statements separated by a semicolon
+$sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'johndoe@example.com'); 
+        INSERT INTO orders (user_id, product, quantity) VALUES (LAST_INSERT_ID(), 'Product A', 2)";
+
+// Execute the SQL query
+if ($mysqli->multi_query($sql)) {
+    // Loop through the result sets if any
+    do {
+        // Get the result set
+        if ($result = $mysqli->store_result()) {
+            // Process the result set
+            $result->free();
+        }
+    } while ($mysqli->next_result());
+} else {
+    // Handle the query error
+    echo "Error: " . $mysqli->error;
+}
+
+// Close the database connection
+$mysqli->close();
